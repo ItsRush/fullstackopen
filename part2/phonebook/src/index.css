@@ -1,0 +1,18 @@
+.error {
+    color :red;
+    border: 2px solid red;
+}
+
+.success {
+    color :red;
+    border: 2px solid red;
+}
+
+.notification {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom:10px;
+    background-color: rgba(128, 128, 128, 0.342);
+    width:300px
+}
