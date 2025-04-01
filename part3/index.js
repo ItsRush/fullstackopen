@@ -46,7 +46,7 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request,response,next) => {
-    Person.find(request.params.id).then(person => {
+    Person.findById(request.params.id).then(person => {
         if(person){
             response.json(person)
         }else {
@@ -57,18 +57,17 @@ app.get('/api/persons/:id', (request,response,next) => {
     })
  
 app.put('/api/persons/:id', (request,response,next) => {
-    const { name, number} = request.body
+    const { name,number} = request.body
 
-    Note.findById(request.params.id)
+    Person.findById(request.params.id)
         .then(person => {
             if(!person) {
                 return response.status(404).end()
             }
-
             person.name = name
             person.number = number
 
-            return person.save().then((updatePerson) => {
+            return person.save().then((updatedPerson) => {
                 response.json(updatedPerson)
             })
         })
@@ -89,12 +88,12 @@ const generateID = () => {
     return String(maxId + 1)
 }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response,next) => {
 
     const body = request.body
 
     if(!body.name || !body.number) {
-        return response.status(400).json({error: 'content missing'})
+        return response.status(400).json({error: 'name or number missing'})
     }
 
     const duplicate = persons.find(person => person.name === body.name)
@@ -113,6 +112,7 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
+    .catch(error => next(error))
     
 })
 
