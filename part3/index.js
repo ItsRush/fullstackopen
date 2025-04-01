@@ -83,10 +83,6 @@ app.delete('/api/persons/:id', (request,response,next) => {
         .catch(error => next(error))
 })
 
-const generateID = () => {
-    const maxId = persons.length > 0 ? Math.max(...persons.map(p => Number(p.id))) : 0
-    return String(maxId + 1)
-}
 
 app.post('/api/persons', (request, response,next) => {
 
@@ -96,20 +92,18 @@ app.post('/api/persons', (request, response,next) => {
         return response.status(400).json({error: 'name or number missing'})
     }
 
-    const duplicate = persons.find(person => person.name === body.name)
-    if(duplicate){
-        return response.status(400).json({
-             error: 'name must be unique' 
+    Person.findOne({name : body.name})
+        .then(existingPerson => {
+            if(existingPerson) {
+                return response.status(400).json({error: 'name must be unique'})
+            }
+            const person = new Person({
+                name: body.name,
+                number: body.number,
+            })
+            return person.save()
         })
-    }
-
-    const person = new Person({
-        id: generateID(),
-        name: body.name,
-        number: body.number,
-    })
-
-    person.save().then(savedPerson => {
+        .then(savedPerson => {
         response.json(savedPerson)
     })
     .catch(error => next(error))
