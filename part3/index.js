@@ -24,7 +24,7 @@ const errorHandler = (error,request,reponse,next) => {
     if(error.name === 'CastError') {
         return reponse.status(400).send({ error: 'malformatted id'})
     } else if( error.name === 'ValidationError') {
-        return response.status(400).json({ error: error.message})
+        return response.status(400).json({ error: 'is shorter than the minimum allowed length (3)'})
     }
     next(error)
 }
