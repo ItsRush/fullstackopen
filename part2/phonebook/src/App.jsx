@@ -95,6 +95,9 @@ const App = () => {
         setNewName('')
         setNumbers('')
       })
+      .catch(error => {
+        setNotification({ message: `Person validation failed: name: (${newName}) ${error.response.data.error}`, type: 'error'})
+      })
   }
 
 
