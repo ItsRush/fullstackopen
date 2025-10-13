@@ -1,120 +1,108 @@
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import  Person from './components/Person'
 import Filter from './components/Filter'
-import PersonForm from './components/PersonForm'
-import Persons from './components/Persons'
-import personService from './services/persons'
+import Form from './components/Form'
+import personService from './services/personService'
 import Notification from './components/Notification'
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [numbers, setNumbers] = useState([])
   const [newName, setNewName] = useState('')
-  const [newSearch, setSearch] = useState('')
-  const [notification, setNotification] = useState(null)
+  const[newNumber, setNewNumber] = useState('')
+  const[search, setSearch] = useState('')
+  const[errorMessage, setErrorMessage] = useState('')
+  const[successMessage, setSuccessMessage] = useState('')
 
-  
-  const handleRemoveName = (id) => {
-    if(window.confirm(`Delete ${persons.name} ?`))
-    console.log('removed name with id: ', id)
-
-    personService
-    .remove(id)
-    .then(() => {
-      setPersons(persons.filter(person => person.id !== id ))
-  })
-  
-  }
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNumbers(event.target.value)
-  }
-  const handleShowAll = (event) => {
-    console.log(event.target.value)
-    setSearch(event.target.value)
-  }
 
   useEffect(() => {
-    console.log('effect')
     personService
       .getAll()
       .then(initialPersons => {
-        console.log('promise fulfilled')
         setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+console.log('render', persons.length, 'persons' )
 
-  const addName = (event) => {
-    event.preventDefault()
 
-    if (persons.find(person => person.name === newName)) { 
-      console.log('found: ',newName)
-      alert(`${newName} is already added to phonebook`)
-        if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-          const person = persons.find(person=> person.name === newName)
-          const id = person.id
-          const changedPerson = { ...person, number: numbers }
-          console.log('changed person: ',changedPerson)
+  const handleName = (event) => {
+    setNewName(event.target.value)
+  }
 
-          personService
-          .update(person.id, changedPerson)
-          .then(returnedPerson => {
-          //If the person.id matches the id of the updated persons id replace that person with returnedPerson else keep the person unchanged
-            setPersons(persons.map(person => person.id == id ? returnedPerson : person))
-            setNewName('')
-            setNumbers('')
-          })
-          .catch(error => {
-            setNotification({message: `${newName} was already deleted from server` , type: 'error'})
-            setTimeout(() => {
-              setNotification(null)
-            }, 5000)
-            setPersons(persons.filter(person => person.id !== id))
-          })
-        }
-        return
-    }
-    const nameObject = {
-      name: newName,
-      number: numbers
-    }
-    personService
+  const handleNumber = (event) => {
+    setNewNumber(event.target.value)
+  }
+  
+  const handleSearch = (event) => {
+    setSearch(event.target.value)
+  }
 
-      .create(nameObject)
-      .then(returnedPerson=> {
-        setNotification({ message: `Added ${newName}`, type: 'success'})
-        setTimeout(() => {
-          setNotification(null)
-        }
-        ,5000)
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNumbers('')
-      })
-      .catch(error => {
-        setNotification({ message: `Person validation failed: name: (${newName}) ${error.response.data.error}`, type: 'error'})
+  const handleRemove = (id) => {
+    const personToDelete = persons.find(person=> person.id === id)
+    if(window.confirm(`${`Delete ${personToDelete.name} ? `}`))
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
       })
   }
 
+  const handleNewNumber = (id) => {
+    const person = persons.find(person => person.id === id)
+    const changedNumber = {...person, number:newNumber}
+    personService
+      .update(id, changedNumber)
+      .then(returnedPerson => {
+        setPersons(persons.map(person=> person.id === id ? returnedPerson : person))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        setErrorMessage(`Information of ${person.name} has already been removed from the server`)
+        setTimeout(() => {
+        setErrorMessage(null)
+        }, 5000);
+      })
+  }
+  const newPerson = (event) => {
+    console.log('adding---', event.target)
+    event.preventDefault()
+    const personObject = {
+      name: newName,
+      number : newNumber
+    }
+    const duplicate = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+    if(duplicate){
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        handleNewNumber(duplicate.id)
+        return
+      }
+      return
+    }
+    personService
+    .create(personObject)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
+      setSuccessMessage(`Added ${returnedPerson.name}`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000);
+      setNewName('')
+      setNewNumber('')
+    })
 
+  }
 
-  
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        <Notification notification={notification} />
-      </div>
-      <Filter newSearch={newSearch} handleShowAll={handleShowAll} />
-      <h2>add a new</h2>
-      <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} numbers={numbers} handleNumberChange={handleNumberChange} />
-
+      <Notification errorMessage={errorMessage} successMessage={successMessage} />
+      <Filter search ={search} handleSearch={handleSearch}/>
+      <h1>add a new</h1>
+      <Form newPerson={newPerson} newName = {newName} newNumber={newNumber} handleName= {handleName} handleNumber ={handleNumber} />
       <h2>Numbers</h2>
-      <Persons newSearch={newSearch} persons={persons} handleRemoveName={handleRemoveName}/>
+      <Person persons = {persons} search = {search} handleRemove={handleRemove}/>
     </div>
   )
 }
