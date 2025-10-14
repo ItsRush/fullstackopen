@@ -1,8 +1,13 @@
-import axios from "axios";
-const baseUrl = "https://studies.cs.helsinki.fi/restcountries/api/all";
+import axios from 'axios'
+
+const baseUrl = 'https://studies.cs.helsinki.fi/restcountries/api'
 
 const getAll = () => {
-    return axios.get(baseUrl);
+    const request = axios.get(`${baseUrl}/all`)
+    return request.then(response => response.data)
 }
 
-export default { getAll }
+
+export default {
+    getAll
+}
