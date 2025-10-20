@@ -39,7 +39,7 @@ console.log('render', persons.length, 'persons' )
   }
 
   const handleRemove = (id) => {
-    const personToDelete = persons.find(person=> person.id === id)
+    const personToDelete = persons.find(person => person.id === id)
     if(window.confirm(`${`Delete ${personToDelete.name} ? `}`))
       personService
         .remove(id)
@@ -61,7 +61,7 @@ console.log('render', persons.length, 'persons' )
       .catch(error => {
         setErrorMessage(`Information of ${person.name} has already been removed from the server`)
         setTimeout(() => {
-        setErrorMessage(null)
+        setErrorMessage('')
         }, 5000);
       })
   }
@@ -86,12 +86,18 @@ console.log('render', persons.length, 'persons' )
       setPersons(persons.concat(returnedPerson))
       setSuccessMessage(`Added ${returnedPerson.name}`)
       setTimeout(() => {
-        setSuccessMessage(null)
+        setSuccessMessage('')
       }, 5000);
       setNewName('')
       setNewNumber('')
     })
-
+    .catch(error => {
+      setErrorMessage(`Person validation failed: ${error.response.data.error}`)
+      setTimeout(() => {
+        setErrorMessage('')
+      }, 5000);
+      console.log(error.response.data.message)
+    })
   }
 
   return (

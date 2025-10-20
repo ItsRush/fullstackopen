@@ -23,7 +23,15 @@ mongoose.connect(url)
     })
 
 const personSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        validate: {
+            validator: function(name) {
+                return name.length > 2
+            },
+            message: props => `${props.value} is shorter than the allowed minimum length (3)`
+        }
+    },
     number: String
 })
 
