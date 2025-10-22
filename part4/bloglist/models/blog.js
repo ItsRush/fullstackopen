@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+mongoose.set('strictQuery', false)
+
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
@@ -8,7 +10,7 @@ const blogSchema = mongoose.Schema({
 })
 
 blogSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
+    transform:(document,returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
