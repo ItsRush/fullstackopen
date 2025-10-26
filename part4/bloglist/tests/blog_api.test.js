@@ -5,6 +5,7 @@ const supertest = require('supertest')
 const app = require('../app')
 
 const Blog = require('../models/blog')
+const { AssertionError } = require('node:assert/strict')
 const api = supertest(app)
 
 const initialBlogs = [
@@ -87,4 +88,35 @@ test('a blog can be added', async () => {
         const response = await api.get('/api/blogs')
 
         assert.strictEqual(response.body.length, initialBlogs.length + 1)
+})
+
+test('delete a single blog', async () => {
+    const blogsAtStart = await Blog.find({})
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await Blog.find({})
+
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
+})
+
+test('update a single blog', async () => {
+    const blogsAtStart = await Blog.find({})
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedLikes = {
+        likes: 100
+    }
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedLikes)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const updatedBlog = await Blog.findById(blogToUpdate.id)
+
+    assert.strictEqual(updatedBlog.likes, updatedLikes.likes)
 })
