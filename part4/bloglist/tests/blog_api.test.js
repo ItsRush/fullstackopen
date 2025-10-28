@@ -6,6 +6,7 @@ const app = require('../app')
 
 const Blog = require('../models/blog')
 const { AssertionError } = require('node:assert/strict')
+const User = require('../models/user')
 const api = supertest(app)
 
 const initialBlogs = [
@@ -119,4 +120,42 @@ test('update a single blog', async () => {
     const updatedBlog = await Blog.findById(blogToUpdate.id)
 
     assert.strictEqual(updatedBlog.likes, updatedLikes.likes)
+})
+
+test('created a new unique user', async () => {
+    const usersAtStart = await User.find({})
+    
+    const newUser = {
+        username: "New User",
+        name: "User Name", 
+        password: "userpassword123",
+    }
+
+    await api
+        .post('/api/users/')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await User.find({})
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+})
+
+test.only('adding an already existing user', async () => {
+    const usersAtStart = await User.find({})
+    
+    const newUser = {
+        username: "New User",
+        name: "My Name", 
+        password: "userpassword12345",
+    }
+
+    await api
+        .post('/api/users/')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await User.find({})
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 })
