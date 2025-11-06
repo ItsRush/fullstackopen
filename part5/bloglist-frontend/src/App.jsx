@@ -11,9 +11,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
 
@@ -32,6 +30,25 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const addBlog = (blogObject) => {
+    if(!blogObject.title || !blogObject.author || !blogObject.url) {
+      setErrorMessage('Please fill out all the fields')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
+    }
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setSuccessMessage(`${blogObject.author} created a new blog " ${blogObject.title} "`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000);
+      })
+  }
+
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -57,42 +74,6 @@ const App = () => {
 
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-  }
-
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
-    try {
-      const newBlog = {
-        title,
-        author,
-        url
-      }
-    
-    if(title === '' && author === '' && url === '') {
-      setErrorMessage('Please fill out all the fields')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000);
-    }
-
-    const createdBlog = await blogService.create(newBlog)
-
-    setSuccessMessage(`a new blog ${createdBlog.title} by ${createdBlog.author}`)
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000);
-    setBlogs(blogs.concat(createdBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
-    } catch{
-      setErrorMessage(`Failed to create a new blog`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000);
-    } 
   }
 
   const loginForm = () => (
@@ -124,7 +105,7 @@ const App = () => {
     <p>{user.name} logged in </p>
     <button onClick={handleLogOut}>logout</button>
     <Togglable buttonLabel='create new note'>
-      <BlogForm handleCreateBlog={handleCreateBlog} title={title} setTitle={setTitle} author={author} url={url} setUrl={setUrl} />
+      <BlogForm createBlog={addBlog}/>
     </Togglable>
       <div>
         {blogs.map(blog =>
