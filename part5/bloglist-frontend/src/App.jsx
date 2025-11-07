@@ -99,6 +99,7 @@ const App = () => {
   )
 
   const blogForm = () => (
+    
     <div>
     <h1>Blogs</h1>
     <Notification errorMessage={errorMessage} successMessage={successMessage}/>
@@ -107,6 +108,7 @@ const App = () => {
     <Togglable buttonLabel='create new note'>
       <BlogForm createBlog={addBlog}/>
     </Togglable>
+    {console.log(blogs)}
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

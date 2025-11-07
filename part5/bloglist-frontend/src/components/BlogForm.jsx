@@ -4,6 +4,7 @@ const BlogForm = ({createBlog}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
+    const [likes, setLikes] = useState('')
 
 const addBlog = (event) => {
     event.preventDefault()
@@ -17,9 +18,8 @@ const addBlog = (event) => {
     setAuthor('')
     setUrl('')
 }
-
     
-    return (
+return (
         <div>
             <form onSubmit={addBlog}>
                 <h2>Create a new blog</h2>
