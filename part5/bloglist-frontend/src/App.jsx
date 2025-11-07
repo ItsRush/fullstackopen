@@ -49,6 +49,29 @@ const App = () => {
       })
   }
 
+  const handleLikes = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.like(blogObject)
+      setBlogs(blogs.map( blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+    } catch {
+      setErrorMessage('Failed to like the blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
+    }
+  }
+
+  const handleDelete = async (blogObject) => {
+    try {
+      await blogService.remove(blogObject.id)
+      setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+    } catch {
+      setErrorMessage('Error deleting a blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000);
+    }
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -108,10 +131,9 @@ const App = () => {
     <Togglable buttonLabel='create new note'>
       <BlogForm createBlog={addBlog}/>
     </Togglable>
-    {console.log(blogs)}
       <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+        {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
+          <Blog key={blog.id} blog={blog} likeBlog={handleLikes} deleteBlog={handleDelete}/>
         )}
       </div>
     </div>
