@@ -18,11 +18,11 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+        setBlogs( blogs )
+      )
   }, [])
 
-  useEffect(()=> {
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if(loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -36,7 +36,7 @@ const App = () => {
       setErrorMessage('Please fill out all the fields')
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000);
+      }, 5000)
     }
     blogService
       .create(blogObject)
@@ -45,7 +45,7 @@ const App = () => {
         setSuccessMessage(`${blogObject.author} created a new blog " ${blogObject.title} "`)
         setTimeout(() => {
           setSuccessMessage(null)
-        }, 5000);
+        }, 5000)
       })
   }
 
@@ -57,7 +57,7 @@ const App = () => {
       setErrorMessage('Failed to like the blog')
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000);
+      }, 5000)
     }
   }
 
@@ -69,7 +69,7 @@ const App = () => {
       setErrorMessage('Error deleting a blog')
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000);
+      }, 5000)
     }
   }
 
@@ -88,7 +88,7 @@ const App = () => {
       setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000);
+      }, 5000)
     }
   }
 
@@ -106,14 +106,14 @@ const App = () => {
       <form onSubmit = {handleLogin}>
         <div>
           <label>
-            username 
-            <input type='text' value={username} onChange={({target}) => setUsername(target.value)}/>
+            username
+            <input type='text' value={username} onChange={({ target }) => setUsername(target.value)}/>
           </label>
         </div>
         <div>
           <label>
-            password 
-            <input type='text' value={password} onChange={({target}) => setPassword(target.value)}/>
+            password
+            <input type='text' value={password} onChange={({ target }) => setPassword(target.value)}/>
           </label>
         </div>
         <button type='submit'>login</button>
@@ -122,15 +122,15 @@ const App = () => {
   )
 
   const blogForm = () => (
-    
+
     <div>
-    <h1>Blogs</h1>
-    <Notification errorMessage={errorMessage} successMessage={successMessage}/>
-    <p>{user.name} logged in </p>
-    <button onClick={handleLogOut}>logout</button>
-    <Togglable buttonLabel='create new note'>
-      <BlogForm createBlog={addBlog}/>
-    </Togglable>
+      <h1>Blogs</h1>
+      <Notification errorMessage={errorMessage} successMessage={successMessage}/>
+      <p>{user.name} logged in </p>
+      <button onClick={handleLogOut}>logout</button>
+      <Togglable buttonLabel='create new note'>
+        <BlogForm createBlog={addBlog}/>
+      </Togglable>
       <div>
         {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
           <Blog key={blog.id} blog={blog} likeBlog={handleLikes} deleteBlog={handleDelete}/>

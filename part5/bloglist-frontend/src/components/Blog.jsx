@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, likeBlog, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
@@ -25,16 +25,16 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
     }
   }
 
-  const allInfo = 
+  const allInfo =
     <div style={blogStyle}>
       <p>{blog.title} <button onClick={handleShowAll}>hide</button></p>
       <p>{blog.url}</p>
       <p>likes: {blog.likes} <button onClick={handleLikeClick}>like</button></p>
       <p>{blog.author}</p>
-      <button style={{backgroundColor: 'lightSkyBlue'}} onClick={handleDeleteBlog}>remove</button>
+      <button style={{ backgroundColor: 'lightSkyBlue' }} onClick={handleDeleteBlog}>remove</button>
     </div>
 
-  const shortInfo = 
+  const shortInfo =
     <div style={blogStyle}>
       {blog.title} {blog.author} <button onClick={handleShowAll}>view</button>
     </div>
@@ -42,7 +42,7 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
 
   return (
     <div>
-      { visible ? allInfo : shortInfo} 
+      { visible ? allInfo : shortInfo}
     </div>
   )
 }
