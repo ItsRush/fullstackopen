@@ -26,7 +26,7 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
   }
 
   const allInfo =
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog-extended'>
       <p>{blog.title} <button onClick={handleShowAll}>hide</button></p>
       <p>{blog.url}</p>
       <p>likes: {blog.likes} <button onClick={handleLikeClick}>like</button></p>
@@ -35,7 +35,7 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
     </div>
 
   const shortInfo =
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog-short'>
       {blog.title} {blog.author} <button onClick={handleShowAll}>view</button>
     </div>
 
