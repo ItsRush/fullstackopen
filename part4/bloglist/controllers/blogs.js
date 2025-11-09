@@ -54,6 +54,11 @@ blogsRouter.delete('/:id', async (request,response) => {
   }
 
   const blog = await Blog.findById(request.params.id)
+
+  if(!blog) {
+    return response.status(404).json({ error: 'Blog does not exist'})
+  }
+  
   const userid = decodedToken.id
 
   if(blog.user.toString() === userid.toString()) {

@@ -113,7 +113,7 @@ const App = () => {
         <div>
           <label>
             password
-            <input type='text' value={password} onChange={({ target }) => setPassword(target.value)}/>
+            <input type='password' value={password} onChange={({ target }) => setPassword(target.value)}/>
           </label>
         </div>
         <button type='submit'>login</button>
