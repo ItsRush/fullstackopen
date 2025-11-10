@@ -37,6 +37,7 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+      return
     }
     blogService
       .create(blogObject)
@@ -75,6 +76,8 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
+    setErrorMessage(null)
+    setSuccessMessage(null)
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem(
@@ -97,6 +100,8 @@ const App = () => {
 
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+    setErrorMessage(null)
+    setSuccessMessage(null)
   }
 
   const loginForm = () => (
@@ -128,12 +133,12 @@ const App = () => {
       <Notification errorMessage={errorMessage} successMessage={successMessage}/>
       <p>{user.name} logged in </p>
       <button onClick={handleLogOut}>logout</button>
-      <Togglable buttonLabel='create new note'>
+      <Togglable buttonLabel='create new blog'>
         <BlogForm createBlog={addBlog}/>
       </Togglable>
       <div>
         {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} likeBlog={handleLikes} deleteBlog={handleDelete}/>
+          <Blog key={blog.id} blog={blog} likeBlog={handleLikes} deleteBlog={handleDelete} currentUser={user}/>
         )}
       </div>
     </div>

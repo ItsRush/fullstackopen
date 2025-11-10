@@ -36,7 +36,11 @@ blogsRouter.post('/', async (request, response, next) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.status(201).json(savedBlog)
+  const populatedBlog = await Blog
+    .findById(savedBlog._id)
+    .populate('user', { username: 1, name: 1 })
+    
+  response.status(201).json(populatedBlog)
 })
 
 blogsRouter.delete('/:id', async (request,response) => {
@@ -53,7 +57,9 @@ blogsRouter.delete('/:id', async (request,response) => {
     return response.status(401).json({ error: 'UserId missing or not valid'})
   }
 
-  const blog = await Blog.findById(request.params.id)
+  const blog = await Blog
+    .findById(request.params.id)
+    .populate('user', { username: 1, name: 1 }) 
 
   if(!blog) {
     return response.status(404).json({ error: 'Blog does not exist'})
@@ -61,7 +67,7 @@ blogsRouter.delete('/:id', async (request,response) => {
   
   const userid = decodedToken.id
 
-  if(blog.user.toString() === userid.toString()) {
+  if(blog.user.id.toString() === userid.toString()) {
       await Blog.findByIdAndDelete(request.params.id)
       response.status(204).end()
   } else {
@@ -79,7 +85,12 @@ blogsRouter.put('/:id', async (request, response) => {
   blog.likes = likes
 
   const updatedBlog = await blog.save()
-  response.json(updatedBlog)
+
+  const populatedBlog = await Blog
+    .findById(updatedBlog._id)
+    .populate('user', { username: 1, name: 1 })
+    
+  response.json(populatedBlog)
 })
 
 module.exports = blogsRouter

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, likeBlog, deleteBlog }) => {
+const Blog = ({ blog, likeBlog, deleteBlog, currentUser }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -24,14 +24,18 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
       deleteBlog(blog)
     }
   }
-
+  
+  const isBlogCreator = currentUser && blog.user && currentUser.username === blog.user.username
+  
   const allInfo =
     <div style={blogStyle} className='blog-extended'>
       <p>{blog.title} <button onClick={handleShowAll}>hide</button></p>
       <p>{blog.url}</p>
       <p>likes: {blog.likes} <button onClick={handleLikeClick}>like</button></p>
       <p>{blog.author}</p>
-      <button style={{ backgroundColor: 'lightSkyBlue' }} onClick={handleDeleteBlog}>remove</button>
+      {isBlogCreator && (
+        <button style={{ backgroundColor: 'lightSkyBlue' }} onClick={handleDeleteBlog}>remove</button>
+      )}
     </div>
 
   const shortInfo =
