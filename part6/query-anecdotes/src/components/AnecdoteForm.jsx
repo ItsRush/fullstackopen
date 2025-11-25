@@ -14,7 +14,10 @@ import NotificationContext from "../NotificationContext"
       queryClient.invalidateQueries({ queryKey: ['anecdotes']})
     },
     onError: () => {
-      const errorMsg = error.response.data.message
+      notificationDispatch({ type: 'setNotification', payload: `too short anecdote, must have 5 or more`})
+      setTimeout(() => {
+        notificationDispatch({ type: 'setNotification', payload: ''})
+    }, 5000);
     }
   })
 
