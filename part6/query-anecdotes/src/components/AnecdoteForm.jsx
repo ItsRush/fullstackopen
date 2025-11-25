@@ -12,6 +12,9 @@ import NotificationContext from "../NotificationContext"
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes']})
+    },
+    onError: () => {
+      const errorMsg = error.response.data.message
     }
   })
 
@@ -21,9 +24,9 @@ import NotificationContext from "../NotificationContext"
     event.target.anecdote.value = ''
 
     newAnecdoteMutation.mutate({ content, votes: 0})
-    notificationDispatch({ type: 'createAnecdote', payload: content})
+    notificationDispatch({ type: 'setNotification', payload: `created: ${content}`})
     setTimeout(() => {
-      notificationDispatch({ type: 'clearNotification'})
+      notificationDispatch({ type: 'setNotification', payload: ''})
     }, 5000);
     console.log('new anecdote')
   }
