@@ -1,14 +1,20 @@
 interface Exercises {
     days: number,
     trainingDays: number,
-    target: number, //daily hours 
-    average: number,
     success: boolean,
     rating: number,
     ratingDescription: string
+    target: number, //daily hours 
+    average: number,
 }
 
 const calculateExercises = (dailyHours: number[], target:number): Exercises => {
+    if(dailyHours.length < 1) {
+        throw new Error('Not enough arguments')
+    }
+    if(target <= 0) {
+        throw new Error('Target must be a positive number');
+    }
 
     const periodLength = dailyHours.length
     const trainingDays = dailyHours.filter(h => h > 0).length
@@ -16,9 +22,6 @@ const calculateExercises = (dailyHours: number[], target:number): Exercises => {
     let rating : number
     let ratingDescription : string
 
-    if(target <= 0) {
-        throw new Error('Target must be a positive number');
-    }
 
     const success = average >= target
 
@@ -38,12 +41,23 @@ const calculateExercises = (dailyHours: number[], target:number): Exercises => {
     return {
         days: periodLength,
         trainingDays,
-        target, //target: target
-        average,
         success,
         rating,
-        ratingDescription
+        ratingDescription,
+        target, //target: target
+        average
     }
 }
-
-console.log(calculateExercises([0,3,4,0,5,3,3],3))
+try {
+    const allArgs: number[] = process.argv.slice(2).map(arg => Number(arg))
+    const target: number = allArgs[0]
+    const hours: number[] = allArgs.slice(1)
+    const results = calculateExercises(hours, target)
+    console.log(results)
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened'
+    if(error instanceof Error) {
+        errorMessage += 'Error: '+ error.message
+    }
+    console.log(errorMessage)
+}
