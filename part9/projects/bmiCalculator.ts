@@ -2,37 +2,37 @@
 
 const calculateBmi = (height:number, weight: number) : string => {
     if(height <= 0) {
-        throw new Error('Height cant be a negative number')
+        throw new Error('Height cant be a negative number');
     }
     if(weight <= 0) {
-        throw new Error('Weight cant be a negative number')
+        throw new Error('Weight cant be a negative number');
     }
-    const meters = height / 100
-    const bmi = (weight) / (meters * meters)
+    const meters = height / 100;
+    const bmi = (weight) / (meters * meters);
     switch(true){
         case (bmi < 18.5):
-            return 'Underweight'
+            return 'Underweight';
         case (bmi >= 18.5 && bmi <= 25):
-            return 'Normal range'
+            return 'Normal range';
         case (bmi > 25):
-            return 'Overweight'
+            return 'Overweight';
         default:
-            return 'Invalid BMI'
+            return 'Invalid BMI';
     }
-}
+};
 if(require.main === module){
     try {
-        const height: number = Number(process.argv[2])
-        const weight: number = Number(process.argv[3])
-        const result = calculateBmi(height, weight)
-        console.log(result)
+        const height: number = Number(process.argv[2]);
+        const weight: number = Number(process.argv[3]);
+        const result = calculateBmi(height, weight);
+        console.log(result);
     } catch(error: unknown) {
-        let errorMessage = 'Something bad happened'
+        let errorMessage = 'Something bad happened';
         if(error instanceof Error) {
-            errorMessage += 'Error: '+ error.message
+            errorMessage += 'Error: '+ error.message;
         }
-        console.log(errorMessage)
+        console.log(errorMessage);
     }
 }
 
-export default calculateBmi
+export default calculateBmi;

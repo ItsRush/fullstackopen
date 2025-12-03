@@ -10,32 +10,32 @@ interface Exercises {
 
 const calculateExercises = (dailyHours: number[], target:number): Exercises => {
     if(dailyHours.length < 1) {
-        throw new Error('Not enough arguments')
+        throw new Error('Not enough arguments');
     }
     if(target <= 0) {
         throw new Error('Target must be a positive number');
     }
 
-    const periodLength = dailyHours.length
-    const trainingDays = dailyHours.filter(h => h > 0).length
-    const average = dailyHours.reduce((a,b) => a+b,0 ) / dailyHours.length
-    let rating : number
-    let ratingDescription : string
+    const periodLength = dailyHours.length;
+    const trainingDays = dailyHours.filter(h => h > 0).length;
+    const average = dailyHours.reduce((a,b) => a+b,0 ) / dailyHours.length;
+    let rating : number = 1;
+    let ratingDescription : string = '';
 
 
-    const success = average >= target
+    const success = average >= target;
 
     if(average < target) {
-        rating = 1
-        ratingDescription = 'Unfortunately u have not reached ur goal this week'
+        rating = 1;
+        ratingDescription = 'Unfortunately u have not reached ur goal this week';
     }
     else if(average === target) {
-        rating = 2
-        ratingDescription = 'U have reached ur goal this week!'
+        rating = 2;
+        ratingDescription = 'U have reached ur goal this week!';
     }
     else if( average > target) {
-        rating = 3
-        ratingDescription = 'Good job! U have exceeded ur goal this week!'
+        rating = 3;
+        ratingDescription = 'Good job! U have exceeded ur goal this week!';
     }
 
     return {
@@ -46,18 +46,18 @@ const calculateExercises = (dailyHours: number[], target:number): Exercises => {
         ratingDescription,
         target, //target: target
         average
-    }
-}
+    };
+};
 try {
-    const allArgs: number[] = process.argv.slice(2).map(arg => Number(arg))
-    const target: number = allArgs[0]
-    const hours: number[] = allArgs.slice(1)
-    const results = calculateExercises(hours, target)
-    console.log(results)
+    const allArgs: number[] = process.argv.slice(2).map(arg => Number(arg));
+    const target: number = allArgs[0];
+    const hours: number[] = allArgs.slice(1);
+    const results = calculateExercises(hours, target);
+    console.log(results);
 } catch (error: unknown) {
-    let errorMessage = 'Something bad happened'
+    let errorMessage = 'Something bad happened';
     if(error instanceof Error) {
-        errorMessage += 'Error: '+ error.message
+        errorMessage += 'Error: '+ error.message;
     }
-    console.log(errorMessage)
+    console.log(errorMessage);
 }
