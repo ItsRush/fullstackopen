@@ -20,15 +20,19 @@ const calculateBmi = (height:number, weight: number) : string => {
             return 'Invalid BMI'
     }
 }
-try {
-    const height: number = Number(process.argv[2])
-    const weight: number = Number(process.argv[3])
-    const result = calculateBmi(height, weight)
-    console.log(result)
-} catch(error: unknown) {
-    let errorMessage = 'Something bad happened'
-    if(error instanceof Error) {
-        errorMessage += 'Error: '+ error.message
+if(require.main === module){
+    try {
+        const height: number = Number(process.argv[2])
+        const weight: number = Number(process.argv[3])
+        const result = calculateBmi(height, weight)
+        console.log(result)
+    } catch(error: unknown) {
+        let errorMessage = 'Something bad happened'
+        if(error instanceof Error) {
+            errorMessage += 'Error: '+ error.message
+        }
+        console.log(errorMessage)
     }
-    console.log(errorMessage)
 }
+
+export default calculateBmi
