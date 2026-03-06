@@ -1,4 +1,3 @@
-
 const Filter =({search, handleSearch}) => {
     return (
         <div>

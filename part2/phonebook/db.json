@@ -34,11 +34,7 @@
       "id": "2a64",
       "name": "gfhgdfgdh",
       "number": "2424342"
-    },
-    {
-      "id": "99dd",
-      "name": "hghddgf",
-      "number": "4234234"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

@@ -1,39 +1,38 @@
-const Notification = ({errorMessage, successMessage}) => {
+const Notification =({errorMessage, successMessage}) => {
+    if(errorMessage === '' && successMessage=== ''){
+        return null
+    }
+    const errorStyle = {
+        color: 'red',
+        border: '1px solid red',
+        backgroundColor: 'lightgray',
+        padding: '5px',
+        borderRadius: '5px',
+        marginBottom: '10px'
+    }
+    const successStyle = {
+        color: 'green',
+        border: '1px solid green',
+        backgroundColor: 'lightgray',
+        padding: '5px',
+        borderRadius: '5px',
+        marginBottom: '10px'
+    }
     if(errorMessage){
-        const errorMsgStyle = {
-            color : 'red',
-            backgroundColor: 'gray',
-            border: '1px solid red',
-            padding: '5px',
-            borderRadius: '5px',
-            marginTop: '5px',
-            marginBottom: '5px'
-        }
-        return (
-            <div style= {errorMsgStyle}>
+        return(
+            <div style={errorStyle}>
                 {errorMessage}
             </div>
         )
     }
 
     if(successMessage){
-        const successMsgStyle = {
-            color : 'green',
-            backgroundColor: 'gray',
-            border: '1px solid green',
-            padding: '5px',
-            borderRadius: '5px',
-            marginTop: '5px',
-            marginBottom: '5px'
-        }
         return (
-            <div style={successMsgStyle}>
+            <div style={successStyle}>
                 {successMessage}
             </div>
         )
     }
-
-    return null;
 }
 
-export default Notification;
+export default Notification
