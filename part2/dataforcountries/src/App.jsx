@@ -1,39 +1,58 @@
-import {useState, useEffect} from 'react'
-import countryService from './services/countryService'
-import Country from './components/Country'
+import { useState, useEffect } from 'react'
+import countryService from './services/countries'
+import Filter from './components/Filter'
+import Countries from './components/Countries'
+import weatherService from './services/weather'
 
 
 const App = () => {
   const [countries, setCountries] = useState(null)
   const [search, setSearch] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(null)
+  const [weather, setWeather] = useState(null)
 
-  useEffect (() => {
+
+  useEffect(() => {
     countryService
-    .getAll()
-    .then(initialCountries => {
-      setCountries(initialCountries)
-    })
+      .getAll()
+      .then(initialCountries => {
+        setCountries(initialCountries)
+      })
   }, [])
 
+  useEffect(() => {
+    if(selectedCountry){
+      const [lat,lon] = selectedCountry.latlng
+      weatherService
+      .getWeather(lat,lon)
+      .then(initialWeather => {
+        setWeather(initialWeather)
+      })
+    }
+  },[selectedCountry])
+    
   if(!countries){
-    return null
-  } 
+    return <div>Loading...</div>
+  }
+
+  console.log('countries:', countries);
+  
+  const filteredCountries = search ? countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase())) : []
 
   const handleSearch = (event) => {
     setSearch(event.target.value)
+    setSelectedCountry(null)
   }
 
-  const handleButton = (country) => {
-    setSearch(country.name.common)
+  const handleShow = (country) => {
+    setSelectedCountry(country)
   }
 
   return (
-    <>
-    find countries <input value = {search} onChange={handleSearch}></input>
-    <Country search = {search} countries={countries} handleButton={handleButton}/>
-    </>
+    <div>
+      <Filter search={search} handleSearch={handleSearch}/>
+      <Countries filteredCountries={filteredCountries} handleShow={handleShow} selectedCountry={selectedCountry} weather={weather}/>
+    </div>
   )
-
 }
-
-export default App;
+export default App

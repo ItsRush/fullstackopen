@@ -1,49 +1,30 @@
-const Country = ({countries, search, handleButton}) => {
-    //if search has a value use filter, if it doesnt show an empty array
-    
-    const filteredCountries = search ? countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase())) : []
-
-
- 
-
-
-    if(filteredCountries.length > 20 ){
-        return (
-            <p>Too many matches specify another filter</p>
-        )
+const Country = ({country, weather}) => {
+    console.log('weather:', weather);
+    if(!country || !weather){
+        return null
     }
-    else if(filteredCountries.length === 1) {
-        const country = filteredCountries[0]
-        return (
+
+    return(
+        <div>
+            <h1>{country.name.common}</h1>
+            <p>Capital {country.capital}</p>
+            <p>Area {country.area}</p>
+
+            <h2>Languages</h2>
+            <ul>
+                {Object.values(country.languages).map(language =>
+                    <li key={language}>{language}</li>
+                )}
+            </ul>
             <div>
-                <h1>{country.name.common}</h1>
-                <p>{country.capital} <br></br>{country.area}</p>
-                <h2>Languages</h2>
-                <ul>
-                    {Object.values(country.languages).map(language => 
-                        <li key={language}>{language}</li>
-                    )}
-                </ul>
-                <img src = {country.flags.png}/>
+                <img src={country.flags.png} />
             </div>
-        )
-    }
-    else if (filteredCountries.length <= 20 && filteredCountries.length > 0){
-        return (
-        <ul>
-            {filteredCountries.map(country => 
-                <li key = {country.cca2}>
-                    {country.name.common} <button onClick={() =>handleButton(country)}>Show</button>
-                </li>
-            )}
-            
-        </ul>
-        )
-    }
-
-
-    return null
-    
+            <h2>Weather in {country.capital}</h2>
+            <p>Temperature {weather.main.temp} °C</p>
+            <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} />
+            <p>Wind {weather.wind.speed} m/s</p>
+        </div>
+    )
 }
 
 export default Country;
